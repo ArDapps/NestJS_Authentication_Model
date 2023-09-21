@@ -6,7 +6,16 @@ import { UserService } from "src/user/user.service";
 import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [JwtModule, UserModule],
+  imports: [
+    JwtModule.register({
+      secret: "MySecretKEY",
+      signOptions: {
+        expiresIn: 3600,
+      },
+    }),
+
+    UserModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService],
   exports: [AuthService],

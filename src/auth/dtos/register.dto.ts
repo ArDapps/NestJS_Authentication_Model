@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsNotEmpty, Length } from "class-validator";
 
 export class RegisterDto {
   firstName?: string;
