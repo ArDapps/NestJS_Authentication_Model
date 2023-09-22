@@ -15,7 +15,9 @@ export class AuthGuard implements CanActivate {
 
     try {
       const jwt = request.cookies["jwt"];
-
+      if (!jwt) {
+        throw new NotFoundException("Jwt Toekn Not Found");
+      }
       const payload = await this.jwtService.verify(jwt);
 
       if (!payload) {

@@ -78,6 +78,23 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @Post("user/update")
+  async updateUserInfo(
+    @Body("email") email: string,
+    @Body("firstName") firstName: string,
+    @Body("lastName") lastName: string,
+
+    @Req() request: Request
+  ) {
+    const jwt = request.cookies["jwt"];
+
+    const { id } = await this.jwtService.verifyAsync(jwt);
+
+    await this.userService.update(id, { firstName, lastName, email });
+    return this.userService.findOne({ id });
+  }
+
+  @UseGuards(AuthGuard)
   @Get("me")
   async userProfile(@Req() request: Request) {
     const jwt = request.cookies["jwt"];
@@ -93,6 +110,16 @@ export class AuthController {
 
     return {
       me: user,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("logout")
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie("jwt");
+
+    return {
+      message: "User logged out",
     };
   }
 }
