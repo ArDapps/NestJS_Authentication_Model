@@ -22,8 +22,14 @@ import { RegisterDto } from "./dtos/register.dto";
 import { Request, Response } from "express";
 import * as bcrypt from "bcryptjs";
 import { AuthGuard } from "./auth.guard";
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -31,6 +37,10 @@ export class AuthController {
     private jwtService: JwtService
   ) {}
 
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Post("register")
   async register(@Body(ValidationPipe) body: RegisterDto) {
     const { password_confirm, ...data } = body;
@@ -47,7 +57,10 @@ export class AuthController {
       lastChangedBy: data.email,
     });
   }
-
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Post("login")
   async login(
     @Body("email") email: string,
@@ -79,6 +92,10 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Put("user/updateInfo")
   async updateUserInfo(
     @Body("email") email: string,
@@ -96,6 +113,10 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Get("me")
   async userProfile(@Req() request: Request) {
     const jwt = request.cookies["jwt"];
@@ -115,6 +136,10 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Put("user/updatePassword")
   async updatePassword(
     @Body("password") password: string,
@@ -136,6 +161,10 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @ApiCreatedResponse({
+    description: "The record has been successfully created.",
+  })
+  @ApiForbiddenResponse({ description: "Forbidden." })
   @Post("logout")
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie("jwt");
